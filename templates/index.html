@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralSearch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f0faf6; font-family: 'Inter', sans-serif; min-height: 100vh; color: #1a3a2e; }
+        .page { max-width: 680px; margin: 0 auto; padding: 60px 20px 80px; }
+        .header { text-align: center; margin-bottom: 48px; }
+        .logo { width: 72px; height: 72px; background: #d4f0e6; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; }
+        .header h1 { font-size: 2em; font-weight: 600; color: #0f6e56; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .header p { color: #5a9e88; font-size: 0.95em; }
+        .search-wrap { background: white; border-radius: 20px; border: 1.5px solid #9fe1cb; padding: 6px 6px 6px 20px; display: flex; align-items: center; gap: 10px; margin-bottom: 40px; transition: border-color 0.2s, box-shadow 0.2s; }
+        .search-wrap:focus-within { border-color: #1d9e75; box-shadow: 0 0 0 4px rgba(29,158,117,0.1); }
+        .search-wrap input { flex: 1; border: none; outline: none; font-size: 1em; font-family: 'Inter', sans-serif; color: #1a3a2e; background: transparent; padding: 10px 0; }
+        .search-wrap input::placeholder { color: #9fcfbe; }
+        .search-btn { background: #1d9e75; color: white; border: none; border-radius: 14px; padding: 12px 24px; font-size: 0.95em; font-weight: 500; font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; }
+        .search-btn:hover { background: #0f6e56; }
+        .search-btn:active { transform: scale(0.98); }
+        .scanning { text-align: center; padding: 40px 20px; display: none; }
+        .brain-pulse { width: 64px; height: 64px; background: #d4f0e6; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; animation: breathe 1.4s ease-in-out infinite; }
+        @keyframes breathe { 0%, 100% { transform: scale(1); background: #d4f0e6; } 50% { transform: scale(1.1); background: #9fe1cb; } }
+        .scanning p { color: #1d9e75; font-size: 0.95em; font-weight: 500; }
+        .dots::after { content: ''; animation: dots 1.5s infinite; }
+        @keyframes dots { 0% { content: ''; } 33% { content: '.'; } 66% { content: '..'; } 100% { content: '...'; } }
+        .state-card { background: white; border-radius: 16px; border: 1px solid #d4f0e6; padding: 20px 24px; display: none; margin-bottom: 16px; }
+        .state-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .state-item { text-align: center; }
+        .state-label { font-size: 0.72em; color: #5a9e88; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; font-weight: 500; }
+        .state-value { font-size: 1em; font-weight: 600; color: #0f6e56; }
+        .conf-bar { height: 4px; background: #e1f5ee; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+        .conf-fill { height: 100%; background: #1d9e75; border-radius: 2px; transition: width 0.8s ease; width: 0%; }
+        .query-pill { display: none; background: #e1f5ee; border-radius: 12px; padding: 12px 18px; margin-bottom: 24px; font-size: 0.88em; color: #0f6e56; font-style: italic; }
+        .query-pill span { color: #5a9e88; font-style: normal; font-size: 0.85em; display: block; margin-bottom: 4px; }
+        .results-section { display: none; }
+        .results-label { font-size: 0.82em; color: #5a9e88; margin-bottom: 14px; font-weight: 500; }
+        .result-card { background: white; border-radius: 16px; border: 1px solid #e1f5ee; padding: 20px 22px; margin-bottom: 12px; text-decoration: none; display: block; transition: border-color 0.2s, box-shadow 0.2s; }
+        .result-card:hover { border-color: #9fe1cb; box-shadow: 0 4px 16px rgba(29,158,117,0.08); }
+        .result-badge { display: inline-block; background: #e1f5ee; color: #0f6e56; font-size: 0.72em; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; letter-spacing: 0.04em; }
+        .result-title { font-size: 0.98em; font-weight: 600; color: #1a3a2e; margin-bottom: 8px; line-height: 1.45; }
+        .result-snippet { font-size: 0.85em; color: #5a9e88; line-height: 1.65; margin-bottom: 12px; }
+        .result-url { font-size: 0.78em; color: #9fe1cb; word-break: break-all; }
+        .error-box { background: #fff0f0; border: 1px solid #ffc0c0; border-radius: 12px; padding: 16px 20px; color: #993333; font-size: 0.9em; display: none; margin-top: 16px; }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="header">
+        <div class="logo">🧠</div>
+        <h1>NeuralSearch</h1>
+        <p>Brain-computer interface search engine</p>
+    </div>
+
+    <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="What are you thinking about?" />
+        <button class="search-btn" onclick="doSearch()">Search</button>
+    </div>
+
+    <div class="scanning" id="scanning">
+        <div class="brain-pulse">🧠</div>
+        <p id="scanText">Scanning brain signals<span class="dots"></span></p>
+    </div>
+
+    <div class="state-card" id="stateCard">
+        <div class="state-grid">
+            <div class="state-item">
+                <div class="state-label">Mental state</div>
+                <div class="state-value" id="stateVal">—</div>
+            </div>
+            <div class="state-item">
+                <div class="state-label">Confidence</div>
+                <div class="state-value" id="confVal">—</div>
+                <div class="conf-bar"><div class="conf-fill" id="confFill"></div></div>
+            </div>
+            <div class="state-item">
+                <div class="state-label">Topic</div>
+                <div class="state-value" id="topicVal">—</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="query-pill" id="queryPill">
+        <span>Query constructed from your brain state</span>
+        <div id="queryVal">—</div>
+    </div>
+
+    <div class="results-section" id="resultsSection">
+        <div class="results-label" id="resultsLabel">Results</div>
+        <div id="resultsList"></div>
+    </div>
+
+    <div class="error-box" id="errorBox">Something went wrong. Please try again.</div>
+</div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") doSearch();
+    });
+
+    const scanMessages = ["Scanning brain signals","Detecting mental state","Constructing query","Searching knowledge base"];
+
+    async function doSearch() {
+        const topic = document.getElementById("searchInput").value.trim();
+        if (!topic) return;
+
+        document.getElementById("stateCard").style.display = "none";
+        document.getElementById("queryPill").style.display = "none";
+        document.getElementById("resultsSection").style.display = "none";
+        document.getElementById("errorBox").style.display = "none";
+        document.getElementById("resultsList").innerHTML = "";
+        document.getElementById("scanning").style.display = "block";
+
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < scanMessages.length) {
+                document.getElementById("scanText").childNodes[0].textContent = scanMessages[i++];
+            }
+        }, 700);
+
+        try {
+            const res = await fetch("/search", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic })
+            });
+
+            clearInterval(interval);
+            document.getElementById("scanning").style.display = "none";
+
+            const data = await res.json();
+
+            if (data.error) {
+                document.getElementById("errorBox").style.display = "block";
+                return;
+            }
+
+            document.getElementById("stateVal").textContent = data.mental_state;
+            document.getElementById("confVal").textContent = data.confidence.toFixed(1) + "%";
+            document.getElementById("confFill").style.width = data.confidence + "%";
+            document.getElementById("topicVal").textContent = data.topic;
+            document.getElementById("stateCard").style.display = "block";
+
+            document.getElementById("queryVal").textContent = '"' + data.query + '"';
+            document.getElementById("queryPill").style.display = "block";
+
+            if (data.results && data.results.length > 0) {
+                document.getElementById("resultsLabel").textContent = data.results.length + " results via " + data.results[0].source;
+                data.results.forEach((r, idx) => {
+                    const card = document.createElement("a");
+                    card.href = r.url;
+                    card.target = "_blank";
+                    card.className = "result-card";
+                    card.innerHTML =
+                        '<div class="result-badge">Result ' + (idx+1) + ' &nbsp;·&nbsp; ' + r.source + '</div>' +
+                        '<div class="result-title">' + r.title + '</div>' +
+                        '<div class="result-snippet">' + r.snippet.slice(0,160) + '...</div>' +
+                        '<div class="result-url">' + r.url + '</div>';
+                    document.getElementById("resultsList").appendChild(card);
+                });
+                document.getElementById("resultsSection").style.display = "block";
+            }
+
+        } catch(err) {
+            clearInterval(interval);
+            document.getElementById("scanning").style.display = "none";
+            document.getElementById("errorBox").style.display = "block";
+        }
+    }
+</script>
+</body>
+</html>

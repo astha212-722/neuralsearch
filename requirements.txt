@@ -1,0 +1,7 @@
+flask
+numpy
+scipy
+scikit-learn
+matplotlib
+arxiv
+duckduckgo-search
