@@ -42,7 +42,8 @@ def search():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     print("=" * 55)
-    print("  🧠  NEURALSEARCH — WEB INTERFACE")
+    print("  🧠  NEURALSEARCH — WEB INTERFACE v2.0")
+    print("  Now powered by Google Search!")
     print(f"  Running on port {port}")
     print("=" * 55)
     app.run(host="0.0.0.0", port=port, debug=False)

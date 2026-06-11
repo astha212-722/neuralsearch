@@ -38,7 +38,8 @@ def interactive_mode():
     print("  Type any topic and NeuralSearch will:")
     print("  → Simulate your brain state")
     print("  → Construct the best search query")
-    print("  → Find results and open them instantly")
+    print("  → Find real Google results")
+    print("  → Open them directly in your browser")
     print("  Type 'quit' to exit.")
     print("=" * 55)
 
@@ -65,7 +66,7 @@ def interactive_mode():
 
 if __name__ == "__main__":
     print("=" * 55)
-    print("  🧠  NEURALSEARCH — FULL SYSTEM v1.0")
-    print("  Brain to Search Engine Pipeline")
+    print("  🧠  NEURALSEARCH — FULL SYSTEM v2.0")
+    print("  Now powered by Google Search!")
     print("=" * 55)
     interactive_mode()
