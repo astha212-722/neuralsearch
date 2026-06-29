@@ -3,96 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuralSearch</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>NeuralSearch — Think. Search. Discover.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; min-height: 100vh; transition: background 1s ease; overflow-x: hidden; }
-        body.sunny  { background: linear-gradient(180deg,#FFD97D 0%,#FFF4B8 60%,#e8f5e2 100%); --accent:#f59e0b; --card:#fffdf0; --border:#fcd34d; --text:#78350f; --sub:#b45309; --btn:#f59e0b; --btnhover:#d97706; }
-        body.rainy  { background: linear-gradient(180deg,#4a6fa5 0%,#7fa8d4 50%,#b8d4e8 100%); --accent:#3b82f6; --card:#f0f7ff; --border:#93c5fd; --text:#1e3a5f; --sub:#3b6ea5; --btn:#3b82f6; --btnhover:#2563eb; }
-        body.snowy  { background: linear-gradient(180deg,#c8e6f5 0%,#e8f4fd 50%,#f5fbff 100%); --accent:#60a5fa; --card:#f8fbff; --border:#bfdbfe; --text:#1e3a5f; --sub:#4b7ab5; --btn:#60a5fa; --btnhover:#3b82f6; }
-        body.stormy { background: linear-gradient(180deg,#1a1a2e 0%,#2d2d44 50%,#3d3d5c 100%); --accent:#8b5cf6; --card:#1e1e35; --border:#4c1d95; --text:#e2d9f3; --sub:#a78bfa; --btn:#7c3aed; --btnhover:#6d28d9; }
-        body.foggy  { background: linear-gradient(180deg,#b8b8d4 0%,#d4d4e8 50%,#e8e8f4 100%); --accent:#8b87c4; --card:#f0f0f8; --border:#c4c4dc; --text:#2d2d4a; --sub:#6b6b9a; --btn:#8b87c4; --btnhover:#7470b0; }
-        body.cloudy { background: linear-gradient(180deg,#b0c4d8 0%,#d0dce8 50%,#e8f0f8 100%); --accent:#64748b; --card:#f8fafc; --border:#cbd5e1; --text:#1e293b; --sub:#475569; --btn:#64748b; --btnhover:#475569; }
-        body.default{ background: linear-gradient(180deg,#f0faf6 0%,#e8f5ee 100%); --accent:#1d9e75; --card:#ffffff; --border:#9fe1cb; --text:#1a3a2e; --sub:#5a9e88; --btn:#1d9e75; --btnhover:#0f6e56; }
-        .scene { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; min-height:100vh; transition:background 1.5s ease; overflow-x:hidden; }
+        body.sunny   { background:linear-gradient(180deg,#FFE082 0%,#FFF8DC 55%,#E8F5E9 100%); --a:#F59E0B; --card:#FFFDF0; --border:#FCD34D; --text:#78350F; --sub:#B45309; --btn:#F59E0B; --bh:#D97706; --ticker:#FEF3C7; --ttext:#92400E; }
+        body.rainy   { background:linear-gradient(180deg,#3B6EA5 0%,#6EA8D4 50%,#B8D4E8 100%); --a:#3B82F6; --card:#F0F7FF; --border:#93C5FD; --text:#1E3A5F; --sub:#3B6EA5; --btn:#3B82F6; --bh:#2563EB; --ticker:#DBEAFE; --ttext:#1E40AF; }
+        body.snowy   { background:linear-gradient(180deg,#C8E6F5 0%,#E8F4FD 50%,#F5FBFF 100%); --a:#60A5FA; --card:#F8FBFF; --border:#BFDBFE; --text:#1E3A5F; --sub:#4B7AB5; --btn:#60A5FA; --bh:#3B82F6; --ticker:#EFF6FF; --ttext:#1D4ED8; }
+        body.stormy  { background:linear-gradient(180deg,#1A1A2E 0%,#2D2D44 50%,#3D3D5C 100%); --a:#8B5CF6; --card:#1E1E35; --border:#4C1D95; --text:#E2D9F3; --sub:#A78BFA; --btn:#7C3AED; --bh:#6D28D9; --ticker:#2E1A47; --ttext:#C4B5FD; }
+        body.foggy   { background:linear-gradient(180deg,#B8B8D4 0%,#D4D4E8 50%,#E8E8F4 100%); --a:#8B87C4; --card:#F0F0F8; --border:#C4C4DC; --text:#2D2D4A; --sub:#6B6B9A; --btn:#8B87C4; --bh:#7470B0; --ticker:#E8E8F4; --ttext:#4A4A7A; }
+        body.cloudy  { background:linear-gradient(180deg,#B0C4D8 0%,#D0DCE8 50%,#E8F0F8 100%); --a:#64748B; --card:#F8FAFC; --border:#CBD5E1; --text:#1E293B; --sub:#475569; --btn:#64748B; --bh:#475569; --ticker:#F1F5F9; --ttext:#334155; }
+        body.default { background:linear-gradient(180deg,#F0FAF6 0%,#E8F5EE 100%); --a:#1D9E75; --card:#FFFFFF; --border:#9FE1CB; --text:#1A3A2E; --sub:#5A9E88; --btn:#1D9E75; --bh:#0F6E56; --ticker:#E6F7F1; --ttext:#0F6E56; }
+
+        .scene,.ground { position:fixed; pointer-events:none; z-index:0; overflow:hidden; }
+        .scene { top:0; left:0; width:100%; height:100%; }
+        .ground { bottom:0; left:0; width:100%; height:160px; }
         .raindrop { position:absolute; width:2px; background:linear-gradient(transparent,rgba(100,150,255,0.6)); animation:fall linear infinite; border-radius:2px; }
-        @keyframes fall { to { transform:translateY(110vh); } }
+        @keyframes fall { to{transform:translateY(110vh)} }
         .snowflake { position:absolute; color:white; animation:snowfall linear infinite; opacity:0.8; }
         @keyframes snowfall { 0%{transform:translateY(-20px) rotate(0deg);opacity:0.8} 100%{transform:translateY(110vh) rotate(360deg);opacity:0} }
         .lightning { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(180,150,255,0.15); opacity:0; animation:flash 8s infinite; pointer-events:none; z-index:1; }
         @keyframes flash { 0%,90%,94%,98%,100%{opacity:0} 91%,93%{opacity:1} }
-        .sun { position:absolute; top:-60px; right:80px; width:120px; height:120px; background:radial-gradient(circle,#FFD700 30%,#FFA500 60%,transparent 70%); border-radius:50%; animation:sunpulse 3s ease-in-out infinite; }
+        .sun { position:absolute; top:-60px; right:80px; width:130px; height:130px; background:radial-gradient(circle,#FFD700 30%,#FFA500 60%,transparent 70%); border-radius:50%; animation:sunpulse 3s ease-in-out infinite; }
         @keyframes sunpulse { 0%,100%{box-shadow:0 0 40px 20px rgba(255,200,0,0.3)} 50%{box-shadow:0 0 80px 40px rgba(255,200,0,0.5)} }
         .fog-layer { position:absolute; width:200%; height:80px; background:linear-gradient(90deg,transparent,rgba(200,200,220,0.4),transparent); animation:fogdrift linear infinite; border-radius:50%; }
         @keyframes fogdrift { from{transform:translateX(-50%)} to{transform:translateX(0%)} }
-        .ground { position:fixed; bottom:0; left:0; width:100%; height:160px; pointer-events:none; z-index:0; }
+        .cloud-elem { position:absolute; font-size:40px; animation:cloudfloat linear infinite; opacity:0.85; }
+        @keyframes cloudfloat { from{transform:translateX(-120px)} to{transform:translateX(calc(100vw + 120px))} }
         .animal { position:absolute; font-size:32px; animation:bounce 2s ease-in-out infinite; }
         @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
         .tree { position:absolute; font-size:48px; }
         .house { position:absolute; font-size:44px; }
-        .cloud-elem { position:absolute; font-size:40px; animation:cloudfloat linear infinite; opacity:0.85; }
-        @keyframes cloudfloat { from{transform:translateX(-120px)} to{transform:translateX(calc(100vw + 120px))} }
-        .page { position:relative; z-index:10; max-width:680px; margin:0 auto; padding:60px 20px 200px; }
-        .header { text-align:center; margin-bottom:40px; }
-        .logo { width:72px; height:72px; background:var(--card); border-radius:24px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:32px; box-shadow:0 4px 20px rgba(0,0,0,0.1); transition:background 1s; }
-        .header h1 { font-size:2em; font-weight:600; color:var(--text); margin-bottom:8px; letter-spacing:-0.5px; transition:color 1s; }
-        .header p { color:var(--sub); font-size:0.95em; transition:color 1s; }
-        .weather-badge { display:inline-flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:0.82em; color:var(--sub); margin-top:10px; transition:all 1s; }
-        .search-wrap { background:var(--card); border-radius:20px; border:1.5px solid var(--border); padding:6px 6px 6px 20px; display:flex; align-items:center; gap:10px; margin-bottom:32px; box-shadow:0 4px 20px rgba(0,0,0,0.08); transition:all 1s; }
-        .search-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 4px rgba(0,0,0,0.06); }
-        .search-wrap input { flex:1; border:none; outline:none; font-size:1em; font-family:'Inter',sans-serif; color:var(--text); background:transparent; padding:10px 0; transition:color 1s; }
-        .search-wrap input::placeholder { color:var(--sub); opacity:0.6; }
-        .search-btn { background:var(--btn); color:white; border:none; border-radius:14px; padding:12px 24px; font-size:0.95em; font-weight:500; font-family:'Inter',sans-serif; cursor:pointer; transition:background 0.2s,transform 0.1s; white-space:nowrap; }
-        .search-btn:hover { background:var(--btnhover); }
-        .search-btn:active { transform:scale(0.98); }
-        .scanning { text-align:center; padding:40px 20px; display:none; }
-        .brain-pulse { width:64px; height:64px; background:var(--card); border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:28px; margin:0 auto 16px; animation:breathe 1.4s ease-in-out infinite; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
-        @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
-        .scanning p { color:var(--accent); font-size:0.95em; font-weight:500; }
+
+        .topbar { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:12px 24px; background:rgba(255,255,255,0.15); backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,0.2); }
+        .topbar-logo { font-size:20px; font-weight:700; color:var(--text); letter-spacing:-0.5px; }
+        .topbar-logo span { color:var(--a); }
+        .topbar-right { display:flex; align-items:center; gap:16px; }
+        .clock { font-size:0.8em; color:var(--text); font-weight:500; opacity:0.8; }
+        .weather-pill { display:flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:0.78em; color:var(--sub); transition:all 1s; }
+
+        .hero { position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:80px 20px 180px; transition:all 0.5s ease; }
+        .hero.searched { min-height:auto; padding:80px 20px 20px; justify-content:flex-start; }
+        .greeting { font-size:1em; color:var(--sub); margin-bottom:8px; font-weight:400; transition:color 1s; }
+        .hero-title { font-size:3.5em; font-weight:700; color:var(--text); letter-spacing:-2px; margin-bottom:8px; text-align:center; transition:all 0.5s ease,color 1s; }
+        .hero.searched .hero-title { font-size:1.8em; letter-spacing:-1px; }
+        .hero-title span { color:var(--a); }
+        .hero-sub { font-size:1em; color:var(--sub); margin-bottom:40px; text-align:center; transition:all 0.5s ease,color 1s; }
+        .hero.searched .hero-sub { display:none; }
+
+        .quote-box { background:rgba(255,255,255,0.25); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.3); border-radius:16px; padding:16px 24px; max-width:560px; text-align:center; margin-bottom:36px; transition:all 0.5s ease; }
+        .hero.searched .quote-box { display:none; }
+        .quote-text { font-size:0.92em; color:var(--text); font-style:italic; line-height:1.6; margin-bottom:6px; transition:opacity 0.4s; }
+        .quote-author { font-size:0.78em; color:var(--sub); font-weight:500; }
+
+        .brain-fact { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.2); border-radius:20px; padding:6px 16px; font-size:0.78em; color:var(--text); margin-bottom:36px; max-width:500px; text-align:center; transition:all 0.5s; }
+        .hero.searched .brain-fact { display:none; }
+
+        .search-wrap { width:100%; max-width:620px; background:var(--card); border-radius:50px; border:2px solid var(--border); padding:8px 8px 8px 24px; display:flex; align-items:center; gap:10px; box-shadow:0 8px 32px rgba(0,0,0,0.12); transition:all 1s,box-shadow 0.2s; }
+        .search-wrap:focus-within { border-color:var(--a); box-shadow:0 8px 40px rgba(0,0,0,0.16); }
+        .search-icon { font-size:18px; opacity:0.5; }
+        .search-wrap input { flex:1; border:none; outline:none; font-size:1.05em; font-family:'Inter',sans-serif; color:var(--text); background:transparent; padding:10px 0; transition:color 1s; }
+        .search-wrap input::placeholder { color:var(--sub); opacity:0.5; }
+        .search-btn { background:var(--btn); color:white; border:none; border-radius:40px; padding:12px 28px; font-size:0.95em; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:background 0.2s,transform 0.1s; white-space:nowrap; }
+        .search-btn:hover { background:var(--bh); }
+        .search-btn:active { transform:scale(0.97); }
+
+        .results-page { position:relative; z-index:10; max-width:720px; margin:0 auto; padding:20px 20px 200px; display:none; }
+
+        .scanning { text-align:center; padding:48px 20px; display:none; }
+        .brain-pulse { width:72px; height:72px; background:var(--card); border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:32px; margin:0 auto 20px; animation:breathe 1.4s ease-in-out infinite; box-shadow:0 8px 32px rgba(0,0,0,0.12); }
+        @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+        .scanning p { color:var(--a); font-size:1em; font-weight:500; }
+        .scan-steps { display:flex; gap:8px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+        .scan-step { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:0.75em; color:var(--sub); transition:all 0.3s; }
+        .scan-step.active { background:var(--a); color:white; border-color:var(--a); }
         .dots::after { content:''; animation:dots 1.5s infinite; }
         @keyframes dots { 0%{content:''} 33%{content:'.'} 66%{content:'..'} 100%{content:'...'} }
-        .state-card { background:var(--card); border-radius:16px; border:1px solid var(--border); padding:20px 24px; display:none; margin-bottom:16px; box-shadow:0 4px 16px rgba(0,0,0,0.06); transition:all 1s; }
-        .state-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+
+        .state-card { background:var(--card); border-radius:20px; border:1px solid var(--border); padding:20px 28px; display:none; margin-bottom:20px; box-shadow:0 4px 20px rgba(0,0,0,0.06); transition:all 1s; }
+        .state-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
         .state-item { text-align:center; }
-        .state-label { font-size:0.72em; color:var(--sub); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; font-weight:500; }
-        .state-value { font-size:1em; font-weight:600; color:var(--text); }
+        .state-label { font-size:0.7em; color:var(--sub); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px; font-weight:600; }
+        .state-value { font-size:1.05em; font-weight:700; color:var(--text); }
         .conf-bar { height:4px; background:var(--border); border-radius:2px; margin-top:8px; overflow:hidden; }
-        .conf-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.8s ease; width:0%; }
-        .query-pill { display:none; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 18px; margin-bottom:24px; font-size:0.88em; color:var(--text); transition:all 1s; }
-        .query-pill span { color:var(--sub); font-size:0.85em; display:block; margin-bottom:4px; }
+        .conf-fill { height:100%; background:var(--a); border-radius:2px; transition:width 0.8s ease; width:0%; }
+
+        .query-pill { display:none; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 20px; margin-bottom:24px; font-size:0.88em; color:var(--text); transition:all 1s; }
+        .query-pill span { color:var(--sub); font-size:0.82em; display:block; margin-bottom:4px; }
+
         .results-section { display:none; }
-        .results-label { font-size:0.82em; color:var(--sub); margin-bottom:14px; font-weight:500; }
-        .result-card { background:var(--card); border-radius:16px; border:1px solid var(--border); padding:20px 22px; margin-bottom:12px; text-decoration:none; display:block; transition:border-color 0.2s,box-shadow 0.2s,background 1s; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
-        .result-card:hover { border-color:var(--accent); box-shadow:0 4px 20px rgba(0,0,0,0.1); }
-        .result-badge { display:inline-block; background:var(--border); color:var(--text); font-size:0.72em; font-weight:600; padding:3px 10px; border-radius:20px; margin-bottom:10px; }
-        .result-title { font-size:0.98em; font-weight:600; color:var(--text); margin-bottom:8px; line-height:1.45; }
-        .result-snippet { font-size:0.85em; color:var(--sub); line-height:1.65; margin-bottom:12px; }
-        .result-url { font-size:0.78em; color:var(--accent); word-break:break-all; }
-        .error-box { background:#fff0f0; border:1px solid #ffc0c0; border-radius:12px; padding:16px 20px; color:#993333; font-size:0.9em; display:none; margin-top:16px; }
+        .results-label { font-size:0.82em; color:var(--sub); margin-bottom:16px; font-weight:500; }
+        .result-card { background:var(--card); border-radius:20px; border:1px solid var(--border); padding:22px 26px; margin-bottom:14px; text-decoration:none; display:block; transition:border-color 0.2s,box-shadow 0.2s,transform 0.2s,background 1s; box-shadow:0 2px 12px rgba(0,0,0,0.05); }
+        .result-card:hover { border-color:var(--a); box-shadow:0 8px 24px rgba(0,0,0,0.1); transform:translateY(-2px); }
+        .result-meta { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+        .result-badge { background:var(--border); color:var(--text); font-size:0.7em; font-weight:700; padding:3px 10px; border-radius:20px; }
+        .result-source { font-size:0.7em; color:var(--sub); }
+        .result-title { font-size:1em; font-weight:600; color:var(--text); margin-bottom:8px; line-height:1.45; }
+        .result-snippet { font-size:0.85em; color:var(--sub); line-height:1.7; margin-bottom:12px; }
+        .result-url { font-size:0.75em; color:var(--a); word-break:break-all; opacity:0.8; }
+        .error-box { background:#fff0f0; border:1px solid #ffc0c0; border-radius:16px; padding:20px 24px; color:#993333; font-size:0.9em; display:none; margin-top:16px; }
+
+        .news-ticker { position:fixed; bottom:0; left:0; right:0; z-index:100; background:var(--ticker); border-top:1px solid var(--border); padding:10px 0; overflow:hidden; backdrop-filter:blur(8px); }
+        .ticker-label { position:absolute; left:0; top:0; bottom:0; background:var(--a); color:white; padding:0 16px; display:flex; align-items:center; font-size:0.75em; font-weight:700; letter-spacing:0.05em; z-index:2; white-space:nowrap; }
+        .ticker-track { display:flex; animation:ticker 50s linear infinite; padding-left:120px; }
+        .ticker-track:hover { animation-play-state:paused; }
+        @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        .ticker-item { white-space:nowrap; padding:0 32px; font-size:0.8em; color:var(--ttext); font-weight:500; cursor:pointer; }
+        .ticker-item:hover { color:var(--a); text-decoration:underline; }
+        .ticker-sep { color:var(--a); padding:0 8px; opacity:0.5; }
     </style>
 </head>
 <body class="default">
+
 <div class="scene" id="scene"></div>
 <div class="ground" id="ground"></div>
-<div class="page">
-    <div class="header">
-        <div class="logo">🧠</div>
-        <h1>NeuralSearch</h1>
-        <p>Brain-computer interface search engine</p>
-        <div class="weather-badge" id="weatherBadge">🌍 Detecting weather...</div>
+
+<div class="topbar">
+    <div class="topbar-logo">Neural<span>Search</span></div>
+    <div class="topbar-right">
+        <div class="clock" id="clock"></div>
+        <div class="weather-pill" id="weatherPill">🌍 Detecting...</div>
+    </div>
+</div>
+
+<div class="hero" id="hero">
+    <div class="greeting" id="greeting">Good morning!</div>
+    <div class="hero-title">Neural<span>Search</span></div>
+    <div class="hero-sub">Think it. Search it. Powered by your brain.</div>
+    <div class="quote-box">
+        <div class="quote-text" id="quoteText">Loading...</div>
+        <div class="quote-author" id="quoteAuthor"></div>
+    </div>
+    <div class="brain-fact">
+        <span>🧠</span>
+        <span id="brainFactText">Loading brain fact...</span>
     </div>
     <div class="search-wrap">
+        <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" placeholder="What are you thinking about?" />
         <button class="search-btn" onclick="doSearch()">Search</button>
     </div>
+</div>
+
+<div class="results-page" id="resultsPage">
     <div class="scanning" id="scanning">
         <div class="brain-pulse">🧠</div>
         <p id="scanText">Scanning brain signals<span class="dots"></span></p>
+        <div class="scan-steps">
+            <div class="scan-step" id="step1">📡 Reading EEG</div>
+            <div class="scan-step" id="step2">🔬 Processing signals</div>
+            <div class="scan-step" id="step3">🤖 Classifying intent</div>
+            <div class="scan-step" id="step4">🔍 Searching web</div>
+        </div>
     </div>
     <div class="state-card" id="stateCard">
         <div class="state-grid">
-            <div class="state-item"><div class="state-label">Mental state</div><div class="state-value" id="stateVal">—</div></div>
+            <div class="state-item"><div class="state-label">Mental State</div><div class="state-value" id="stateVal">—</div></div>
             <div class="state-item"><div class="state-label">Confidence</div><div class="state-value" id="confVal">—</div><div class="conf-bar"><div class="conf-fill" id="confFill"></div></div></div>
             <div class="state-item"><div class="state-label">Topic</div><div class="state-value" id="topicVal">—</div></div>
         </div>
@@ -104,158 +171,165 @@
     </div>
     <div class="error-box" id="errorBox">Something went wrong. Please try again.</div>
 </div>
-<script>
-const WEATHER_API_KEY = "fafef6996eb87a0295c76ed36eb5e00c";
-const WEATHER_SCENES = {
-    sunny: {
-        emoji:"☀️", label:"Sunny",
-        scene:()=>{
-            const s=document.getElementById("scene");
-            s.innerHTML='<div class="sun"></div>';
-            [{top:"15%",delay:"0s",dur:"25s"},{top:"30%",delay:"10s",dur:"35s"}].forEach(c=>{
-                const el=document.createElement("div");
-                el.className="cloud-elem";
-                el.style.cssText=`top:${c.top};animation-delay:${c.delay};animation-duration:${c.dur};left:-120px`;
-                el.textContent="☁️"; s.appendChild(el);
-            });
-        },
-        ground:()=>{
-            document.getElementById("ground").innerHTML=`
-                <div class="tree" style="left:3%;bottom:0;font-size:56px">🌳</div>
-                <div class="tree" style="left:12%;bottom:0;font-size:48px">🌻</div>
-                <div class="animal" style="left:22%;bottom:10px;animation-delay:0.3s">🐰</div>
-                <div class="animal" style="left:35%;bottom:8px;animation-delay:0.7s">🦋</div>
-                <div class="tree" style="left:48%;bottom:0;font-size:52px">🌳</div>
-                <div class="animal" style="left:60%;bottom:10px;animation-delay:0.5s">🐝</div>
-                <div class="tree" style="left:72%;bottom:0;font-size:44px">🌻</div>
-                <div class="animal" style="left:82%;bottom:8px;animation-delay:0.2s">🦋</div>
-                <div class="tree" style="right:3%;bottom:0;font-size:56px">🌳</div>`;
-        }
-    },
-    rainy: {
-        emoji:"🌧️", label:"Rainy",
-        scene:()=>{
-            const s=document.getElementById("scene"); s.innerHTML="";
-            for(let i=0;i<60;i++){
-                const d=document.createElement("div"); d.className="raindrop";
-                const h=Math.random()*20+10;
-                d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*-100}px;height:${h}px;opacity:${Math.random()*0.5+0.3};animation-duration:${Math.random()*0.8+0.6}s;animation-delay:${Math.random()*2}s`;
-                s.appendChild(d);
-            }
-        },
-        ground:()=>{
-            document.getElementById("ground").innerHTML=`
-                <div class="tree" style="left:3%;bottom:0;font-size:52px">🌲</div>
-                <div class="house" style="left:13%;bottom:0">🏠</div>
-                <div class="animal" style="left:26%;bottom:8px;animation-delay:0.4s">🐸</div>
-                <div class="animal" style="left:38%;bottom:6px;animation-delay:0.8s">🐌</div>
-                <div class="house" style="left:50%;bottom:0;font-size:52px">🏡</div>
-                <div class="animal" style="left:63%;bottom:8px;animation-delay:0.2s">🦆</div>
-                <div class="tree" style="left:74%;bottom:0;font-size:48px">🌲</div>
-                <div class="animal" style="left:84%;bottom:6px;animation-delay:0.6s">🐸</div>
-                <div class="house" style="right:2%;bottom:0">🏠</div>`;
-        }
-    },
-    snowy: {
-        emoji:"❄️", label:"Snowy",
-        scene:()=>{
-            const s=document.getElementById("scene"); s.innerHTML="";
-            const flakes=["❄️","❅","❆","✦","*"];
-            for(let i=0;i<40;i++){
-                const f=document.createElement("div"); f.className="snowflake";
-                f.textContent=flakes[Math.floor(Math.random()*flakes.length)];
-                f.style.cssText=`left:${Math.random()*100}%;top:-20px;font-size:${Math.random()*14+8}px;animation-duration:${Math.random()*4+4}s;animation-delay:${Math.random()*5}s`;
-                s.appendChild(f);
-            }
-        },
-        ground:()=>{
-            document.getElementById("ground").innerHTML=`
-                <div class="tree" style="left:3%;bottom:0;font-size:52px">🎄</div>
-                <div class="house" style="left:13%;bottom:0">🏠</div>
-                <div class="animal" style="left:25%;bottom:8px;animation-delay:0.3s">🐧</div>
-                <div class="animal" style="left:37%;bottom:6px;animation-delay:0.7s">🦊</div>
-                <div class="tree" style="left:50%;bottom:0;font-size:52px">🎄</div>
-                <div class="animal" style="left:62%;bottom:8px;animation-delay:0.5s">🐧</div>
-                <div class="house" style="left:73%;bottom:0">🏠</div>
-                <div class="animal" style="left:84%;bottom:6px;animation-delay:0.2s">🦊</div>
-                <div class="tree" style="right:2%;bottom:0;font-size:52px">🎄</div>`;
-        }
-    },
-    stormy: {
-        emoji:"⛈️", label:"Stormy",
-        scene:()=>{
-            const s=document.getElementById("scene");
-            s.innerHTML='<div class="lightning"></div>';
-            for(let i=0;i<80;i++){
-                const d=document.createElement("div"); d.className="raindrop";
-                d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*-100}px;height:${Math.random()*25+15}px;opacity:${Math.random()*0.4+0.2};animation-duration:${Math.random()*0.5+0.4}s;animation-delay:${Math.random()*1}s;background:linear-gradient(transparent,rgba(180,150,255,0.5))`;
-                s.appendChild(d);
-            }
-        },
-        ground:()=>{
-            document.getElementById("ground").innerHTML=`
-                <div class="tree" style="left:3%;bottom:0;font-size:52px">🌲</div>
-                <div class="house" style="left:13%;bottom:0">🏠</div>
-                <div class="animal" style="left:26%;bottom:8px;animation-delay:0.3s">🦉</div>
-                <div class="animal" style="left:40%;bottom:6px;animation-delay:0.5s">🐱</div>
-                <div class="house" style="left:52%;bottom:0;font-size:50px">🏡</div>
-                <div class="animal" style="left:65%;bottom:8px;animation-delay:0.7s">🦉</div>
-                <div class="tree" style="left:76%;bottom:0;font-size:48px">🌲</div>
-                <div class="animal" style="right:10%;bottom:6px;animation-delay:0.2s">🐱</div>
-                <div class="house" style="right:2%;bottom:0">🏠</div>`;
-        }
-    },
-    foggy: {
-        emoji:"🌫️", label:"Foggy",
-        scene:()=>{
-            const s=document.getElementById("scene"); s.innerHTML="";
-            [20,35,50,65,80].forEach((top,i)=>{
-                const f=document.createElement("div"); f.className="fog-layer";
-                f.style.cssText=`top:${top}%;animation-duration:${20+i*5}s;animation-delay:${i*3}s;opacity:${0.4-i*0.05}`;
-                s.appendChild(f);
-            });
-        },
-        ground:()=>{
-            document.getElementById("ground").innerHTML=`
-                <div class="tree" style="left:3%;bottom:0;font-size:52px;opacity:0.6">🌲</div>
-                <div class="animal" style="left:18%;bottom:8px;animation-delay:0.5s;opacity:0.7">🦌</div>
-                <div class="tree" style="left:32%;bottom:0;font-size:48px;opacity:0.5">🌳</div>
-                <div class="animal" style="left:48%;bottom:6px;animation-delay:0.3s;opacity:0.7">🐇</div>
-                <div class="tree" style="left:62%;bottom:0;font-size:52px;opacity:0.6">🌲</div>
-                <div class="animal" style="left:76%;bottom:8px;animation-delay:0.7s;opacity:0.7">🦌</div>
-                <div class="tree" style="right:3%;bottom:0;font-size:48px;opacity:0.5">🌳</div>`;
-        }
-    },
-    cloudy: {
-        emoji:"⛅", label:"Cloudy",
-        scene:()=>{
-            const s=document.getElementById("scene"); s.innerHTML="";
-            [{top:"8%",delay:"0s",dur:"30s",size:"44px"},{top:"18%",delay:"8s",dur:"40s",size:"36px"},{top:"12%",delay:"15s",dur:"35s",size:"48px"},{top:"25%",delay:"22s",dur:"45s",size:"40px"}].forEach(c=>{
-                const el=document.createElement("div"); el.className="cloud-elem";
-                el.style.cssText=`top:${c.top};animation-delay:${c.delay};animation-duration:${c.dur};left:-120px;font-size:${c.size}`;
-                el.textContent="☁️"; s.appendChild(el);
-            });
-        },
-        ground:()=>{
-            document.getElementById("ground").innerHTML=`
-                <div class="tree" style="left:3%;bottom:0;font-size:52px">🌳</div>
-                <div class="animal" style="left:16%;bottom:8px;animation-delay:0.4s">🐑</div>
-                <div class="animal" style="left:28%;bottom:6px;animation-delay:0.8s">🐦</div>
-                <div class="tree" style="left:40%;bottom:0;font-size:48px">🌳</div>
-                <div class="animal" style="left:52%;bottom:8px;animation-delay:0.2s">🐑</div>
-                <div class="tree" style="left:64%;bottom:0;font-size:52px">🌳</div>
-                <div class="animal" style="left:76%;bottom:6px;animation-delay:0.6s">🐦</div>
-                <div class="tree" style="right:3%;bottom:0;font-size:48px">🌳</div>`;
-        }
-    }
-};
 
-function applyWeather(type){
-    const scene=WEATHER_SCENES[type]||WEATHER_SCENES.cloudy;
-    document.body.className=type;
-    scene.scene(); scene.ground();
-    document.getElementById("weatherBadge").textContent=`${scene.emoji} ${scene.label}`;
-}
+<div class="news-ticker">
+    <div class="ticker-label">📰 LIVE</div>
+    <div class="ticker-track" id="tickerTrack">
+        <span class="ticker-item">Loading latest news...</span>
+    </div>
+</div>
+
+<script>
+const WEATHER_KEY="fafef6996eb87a0295c76ed36eb5e00c";
+const NEWS_KEY="21ec9449-1a80-443f-bd8f-a40a2fa93898";
+
+const QUOTES=[
+    {text:"The brain is wider than the sky.",author:"Emily Dickinson"},
+    {text:"Intelligence is the ability to adapt to change.",author:"Stephen Hawking"},
+    {text:"The only way to do great work is to love what you do.",author:"Steve Jobs"},
+    {text:"Innovation distinguishes between a leader and a follower.",author:"Steve Jobs"},
+    {text:"The future belongs to those who believe in the beauty of their dreams.",author:"Eleanor Roosevelt"},
+    {text:"It always seems impossible until it's done.",author:"Nelson Mandela"},
+    {text:"In the middle of every difficulty lies opportunity.",author:"Albert Einstein"},
+    {text:"The mind is not a vessel to be filled but a fire to be kindled.",author:"Plutarch"},
+    {text:"Imagination is more important than knowledge.",author:"Albert Einstein"},
+    {text:"The best way to predict the future is to invent it.",author:"Alan Kay"},
+    {text:"Stay hungry, stay foolish.",author:"Steve Jobs"},
+    {text:"First, solve the problem. Then, write the code.",author:"John Johnson"},
+    {text:"Technology is best when it brings people together.",author:"Matt Mullenweg"},
+    {text:"The human brain has 100 billion neurons — each one a universe.",author:"Unknown"},
+    {text:"Code is poetry.",author:"WordPress"},
+];
+
+const BRAIN_FACTS=[
+    "Your brain generates about 23 watts of power — enough to power a light bulb.",
+    "The human brain has approximately 86 billion neurons.",
+    "Your brain is 73% water — even 2% dehydration affects attention and memory.",
+    "The brain processes images 60,000 times faster than text.",
+    "Your brain can hold approximately 2.5 petabytes of information.",
+    "Neurons can transmit signals at up to 268 miles per hour.",
+    "The brain uses 20% of the body's total energy despite being only 2% of body weight.",
+    "Your brain continues developing until your mid-20s.",
+    "Brain activity during sleep is actually more intense than when awake.",
+    "The cerebellum contains more than half of all neurons in the brain.",
+];
+
+const SCENES={
+    sunny:{emoji:"☀️",label:"Sunny",apply:()=>{
+        document.body.className="sunny";
+        const s=document.getElementById("scene");
+        s.innerHTML='<div class="sun"></div>';
+        [{top:"15%",delay:"0s",dur:"28s"},{top:"28%",delay:"12s",dur:"38s"}].forEach(c=>{
+            const el=document.createElement("div");el.className="cloud-elem";
+            el.style.cssText=`top:${c.top};animation-delay:${c.delay};animation-duration:${c.dur};left:-120px`;
+            el.textContent="☁️";s.appendChild(el);
+        });
+        document.getElementById("ground").innerHTML=`
+            <div class="tree" style="left:2%;bottom:0;font-size:56px">🌳</div>
+            <div class="tree" style="left:10%;bottom:0;font-size:48px">🌻</div>
+            <div class="animal" style="left:20%;bottom:10px;animation-delay:0.3s">🐰</div>
+            <div class="animal" style="left:32%;bottom:8px;animation-delay:0.7s">🦋</div>
+            <div class="tree" style="left:45%;bottom:0;font-size:52px">🌳</div>
+            <div class="animal" style="left:57%;bottom:10px;animation-delay:0.5s">🐝</div>
+            <div class="tree" style="left:70%;bottom:0;font-size:44px">🌻</div>
+            <div class="animal" style="left:80%;bottom:8px;animation-delay:0.2s">🦋</div>
+            <div class="tree" style="right:2%;bottom:0;font-size:56px">🌳</div>`;
+    }},
+    rainy:{emoji:"🌧️",label:"Rainy",apply:()=>{
+        document.body.className="rainy";
+        const s=document.getElementById("scene");s.innerHTML="";
+        for(let i=0;i<65;i++){
+            const d=document.createElement("div");d.className="raindrop";
+            d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*-100}px;height:${Math.random()*20+10}px;opacity:${Math.random()*0.5+0.3};animation-duration:${Math.random()*0.8+0.6}s;animation-delay:${Math.random()*2}s`;
+            s.appendChild(d);
+        }
+        document.getElementById("ground").innerHTML=`
+            <div class="tree" style="left:2%;bottom:0;font-size:52px">🌲</div>
+            <div class="house" style="left:12%;bottom:0">🏠</div>
+            <div class="animal" style="left:24%;bottom:8px;animation-delay:0.4s">🐸</div>
+            <div class="animal" style="left:36%;bottom:6px;animation-delay:0.8s">🐌</div>
+            <div class="house" style="left:48%;bottom:0;font-size:50px">🏡</div>
+            <div class="animal" style="left:61%;bottom:8px;animation-delay:0.2s">🦆</div>
+            <div class="tree" style="left:73%;bottom:0;font-size:48px">🌲</div>
+            <div class="animal" style="left:83%;bottom:6px;animation-delay:0.6s">🐸</div>
+            <div class="house" style="right:2%;bottom:0">🏠</div>`;
+    }},
+    snowy:{emoji:"❄️",label:"Snowy",apply:()=>{
+        document.body.className="snowy";
+        const s=document.getElementById("scene");s.innerHTML="";
+        for(let i=0;i<45;i++){
+            const f=document.createElement("div");f.className="snowflake";
+            f.textContent=["❄️","❅","❆","✦","*"][Math.floor(Math.random()*5)];
+            f.style.cssText=`left:${Math.random()*100}%;top:-20px;font-size:${Math.random()*14+8}px;animation-duration:${Math.random()*4+4}s;animation-delay:${Math.random()*5}s`;
+            s.appendChild(f);
+        }
+        document.getElementById("ground").innerHTML=`
+            <div class="tree" style="left:2%;bottom:0;font-size:52px">🎄</div>
+            <div class="house" style="left:12%;bottom:0">🏠</div>
+            <div class="animal" style="left:24%;bottom:8px;animation-delay:0.3s">🐧</div>
+            <div class="animal" style="left:36%;bottom:6px;animation-delay:0.7s">🦊</div>
+            <div class="tree" style="left:48%;bottom:0;font-size:52px">🎄</div>
+            <div class="animal" style="left:60%;bottom:8px;animation-delay:0.5s">🐧</div>
+            <div class="house" style="left:72%;bottom:0">🏠</div>
+            <div class="animal" style="left:83%;bottom:6px;animation-delay:0.2s">🦊</div>
+            <div class="tree" style="right:2%;bottom:0;font-size:52px">🎄</div>`;
+    }},
+    stormy:{emoji:"⛈️",label:"Stormy",apply:()=>{
+        document.body.className="stormy";
+        const s=document.getElementById("scene");
+        s.innerHTML='<div class="lightning"></div>';
+        for(let i=0;i<85;i++){
+            const d=document.createElement("div");d.className="raindrop";
+            d.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*-100}px;height:${Math.random()*25+15}px;opacity:${Math.random()*0.4+0.2};animation-duration:${Math.random()*0.5+0.4}s;animation-delay:${Math.random()*1}s;background:linear-gradient(transparent,rgba(180,150,255,0.5))`;
+            s.appendChild(d);
+        }
+        document.getElementById("ground").innerHTML=`
+            <div class="tree" style="left:2%;bottom:0;font-size:52px">🌲</div>
+            <div class="house" style="left:12%;bottom:0">🏠</div>
+            <div class="animal" style="left:25%;bottom:8px;animation-delay:0.3s">🦉</div>
+            <div class="animal" style="left:38%;bottom:6px;animation-delay:0.5s">🐱</div>
+            <div class="house" style="left:50%;bottom:0;font-size:50px">🏡</div>
+            <div class="animal" style="left:63%;bottom:8px;animation-delay:0.7s">🦉</div>
+            <div class="tree" style="left:75%;bottom:0;font-size:48px">🌲</div>
+            <div class="animal" style="right:10%;bottom:6px;animation-delay:0.2s">🐱</div>
+            <div class="house" style="right:2%;bottom:0">🏠</div>`;
+    }},
+    foggy:{emoji:"🌫️",label:"Foggy",apply:()=>{
+        document.body.className="foggy";
+        const s=document.getElementById("scene");s.innerHTML="";
+        [20,35,50,65,80].forEach((top,i)=>{
+            const f=document.createElement("div");f.className="fog-layer";
+            f.style.cssText=`top:${top}%;animation-duration:${20+i*5}s;animation-delay:${i*3}s;opacity:${0.4-i*0.05}`;
+            s.appendChild(f);
+        });
+        document.getElementById("ground").innerHTML=`
+            <div class="tree" style="left:2%;bottom:0;font-size:52px;opacity:0.6">🌲</div>
+            <div class="animal" style="left:17%;bottom:8px;animation-delay:0.5s;opacity:0.7">🦌</div>
+            <div class="tree" style="left:31%;bottom:0;font-size:48px;opacity:0.5">🌳</div>
+            <div class="animal" style="left:47%;bottom:6px;animation-delay:0.3s;opacity:0.7">🐇</div>
+            <div class="tree" style="left:61%;bottom:0;font-size:52px;opacity:0.6">🌲</div>
+            <div class="animal" style="left:75%;bottom:8px;animation-delay:0.7s;opacity:0.7">🦌</div>
+            <div class="tree" style="right:2%;bottom:0;font-size:48px;opacity:0.5">🌳</div>`;
+    }},
+    cloudy:{emoji:"⛅",label:"Cloudy",apply:()=>{
+        document.body.className="cloudy";
+        const s=document.getElementById("scene");s.innerHTML="";
+        [{top:"8%",delay:"0s",dur:"30s",size:"44px"},{top:"18%",delay:"8s",dur:"40s",size:"36px"},{top:"12%",delay:"15s",dur:"35s",size:"48px"},{top:"25%",delay:"22s",dur:"45s",size:"40px"}].forEach(c=>{
+            const el=document.createElement("div");el.className="cloud-elem";
+            el.style.cssText=`top:${c.top};animation-delay:${c.delay};animation-duration:${c.dur};left:-120px;font-size:${c.size}`;
+            el.textContent="☁️";s.appendChild(el);
+        });
+        document.getElementById("ground").innerHTML=`
+            <div class="tree" style="left:2%;bottom:0;font-size:52px">🌳</div>
+            <div class="animal" style="left:15%;bottom:8px;animation-delay:0.4s">🐑</div>
+            <div class="animal" style="left:27%;bottom:6px;animation-delay:0.8s">🐦</div>
+            <div class="tree" style="left:39%;bottom:0;font-size:48px">🌳</div>
+            <div class="animal" style="left:51%;bottom:8px;animation-delay:0.2s">🐑</div>
+            <div class="tree" style="left:63%;bottom:0;font-size:52px">🌳</div>
+            <div class="animal" style="left:75%;bottom:6px;animation-delay:0.6s">🐦</div>
+            <div class="tree" style="right:2%;bottom:0;font-size:48px">🌳</div>`;
+    }}
+};
 
 function mapWeather(id){
     if(id>=200&&id<300)return"stormy";
@@ -266,38 +340,98 @@ function mapWeather(id){
     return"cloudy";
 }
 
+// Clock
+function updateClock(){
+    const now=new Date();
+    const h=now.getHours(),m=now.getMinutes();
+    const ampm=h>=12?"PM":"AM";
+    const hh=h%12||12;
+    const mm=m<10?"0"+m:m;
+    const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    document.getElementById("clock").textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()} · ${hh}:${mm} ${ampm}`;
+    document.getElementById("greeting").textContent=h<12?"Good morning! ☀️":h<17?"Good afternoon! 🌤️":"Good evening! 🌙";
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// Quotes
+let qi=Math.floor(Math.random()*QUOTES.length);
+function updateQuote(){
+    const q=QUOTES[qi%QUOTES.length];
+    const el=document.getElementById("quoteText");
+    el.style.opacity=0;
+    setTimeout(()=>{el.textContent=`"${q.text}"`;document.getElementById("quoteAuthor").textContent=`— ${q.author}`;el.style.opacity=1;},400);
+    qi++;
+}
+document.getElementById("quoteText").style.transition="opacity 0.4s";
+updateQuote();
+setInterval(updateQuote,30000);
+
+// Brain fact
+document.getElementById("brainFactText").textContent=BRAIN_FACTS[Math.floor(Math.random()*BRAIN_FACTS.length)];
+
+// Weather
 async function fetchWeather(){
     try{
-        const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000}));
+        const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:6000}));
         const{latitude:lat,longitude:lon}=pos.coords;
-        const resp=await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}`);
+        const resp=await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_KEY}`);
         const data=await resp.json();
         const type=mapWeather(data.weather[0].id);
-        applyWeather(type);
-        document.getElementById("weatherBadge").textContent=`${WEATHER_SCENES[type].emoji} ${data.weather[0].description} · ${data.name}`;
+        SCENES[type].apply();
+        document.getElementById("weatherPill").textContent=`${SCENES[type].emoji} ${data.weather[0].description} · ${data.name}`;
     }catch(e){
-        applyWeather("cloudy");
-        document.getElementById("weatherBadge").textContent="⛅ Weather unavailable";
+        SCENES.cloudy.apply();
+        document.getElementById("weatherPill").textContent="⛅ Weather unavailable";
     }
 }
 
+// News
+async function fetchNews(){
+    try{
+        const resp=await fetch(`https://gnews.io/api/v4/top-headlines?category=technology&lang=en&max=10&apikey=${NEWS_KEY}`);
+        const data=await resp.json();
+        const articles=data.articles||[];
+        if(!articles.length)return;
+        const track=document.getElementById("tickerTrack");
+        let html="";
+        articles.forEach(a=>{
+            html+=`<span class="ticker-item" onclick="window.open('${a.url}','_blank')">${a.title}</span><span class="ticker-sep">•</span>`;
+        });
+        track.innerHTML=html+html;
+    }catch(e){console.log("News unavailable");}
+}
+
+// Search
 document.getElementById("searchInput").addEventListener("keypress",e=>{if(e.key==="Enter")doSearch();});
-const scanMessages=["Scanning brain signals","Detecting mental state","Constructing query","Searching knowledge base"];
+const scanMessages=["Reading EEG signals","Processing frequency bands","Classifying mental intent","Searching the web"];
+let searched=false;
 
 async function doSearch(){
     const topic=document.getElementById("searchInput").value.trim();
     if(!topic)return;
+    if(!searched){
+        document.getElementById("hero").classList.add("searched");
+        document.getElementById("resultsPage").style.display="block";
+        searched=true;
+    }
     document.getElementById("stateCard").style.display="none";
     document.getElementById("queryPill").style.display="none";
     document.getElementById("resultsSection").style.display="none";
     document.getElementById("errorBox").style.display="none";
     document.getElementById("resultsList").innerHTML="";
+    ["step1","step2","step3","step4"].forEach(s=>document.getElementById(s).classList.remove("active"));
     document.getElementById("scanning").style.display="block";
     let i=0;
-    const interval=setInterval(()=>{if(i<scanMessages.length)document.getElementById("scanText").childNodes[0].textContent=scanMessages[i++];},700);
+    const si=setInterval(()=>{
+        if(i>0)document.getElementById("step"+(i)).classList.remove("active");
+        if(i<4){document.getElementById("step"+(i+1)).classList.add("active");document.getElementById("scanText").childNodes[0].textContent=scanMessages[i];i++;}
+    },700);
     try{
         const res=await fetch("/search",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({topic})});
-        clearInterval(interval);
+        clearInterval(si);
+        ["step1","step2","step3","step4"].forEach(s=>document.getElementById(s).classList.remove("active"));
         document.getElementById("scanning").style.display="none";
         const data=await res.json();
         if(data.error){document.getElementById("errorBox").style.display="block";return;}
@@ -312,19 +446,22 @@ async function doSearch(){
             document.getElementById("resultsLabel").textContent=data.results.length+" results via "+data.results[0].source;
             data.results.forEach((r,idx)=>{
                 const card=document.createElement("a");
-                card.href=r.url; card.target="_blank"; card.className="result-card";
-                card.innerHTML='<div class="result-badge">Result '+(idx+1)+' · '+r.source+'</div><div class="result-title">'+r.title+'</div><div class="result-snippet">'+r.snippet.slice(0,160)+'...</div><div class="result-url">'+r.url+'</div>';
+                card.href=r.url;card.target="_blank";card.className="result-card";
+                card.innerHTML='<div class="result-meta"><span class="result-badge">'+(idx+1)+'</span><span class="result-source">'+r.source+'</span></div><div class="result-title">'+r.title+'</div><div class="result-snippet">'+r.snippet.slice(0,180)+'...</div><div class="result-url">🔗 '+r.url+'</div>';
                 document.getElementById("resultsList").appendChild(card);
             });
             document.getElementById("resultsSection").style.display="block";
         }
+        document.getElementById("resultsPage").scrollIntoView({behavior:"smooth"});
     }catch(err){
-        clearInterval(interval);
+        clearInterval(si);
         document.getElementById("scanning").style.display="none";
         document.getElementById("errorBox").style.display="block";
     }
 }
+
 fetchWeather();
+fetchNews();
 </script>
 </body>
 </html>
